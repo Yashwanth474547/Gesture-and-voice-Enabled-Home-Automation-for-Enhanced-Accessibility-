@@ -1,0 +1,115 @@
+import cv2
+ import mediapipe as mp
+ import serial
+ import time
+ import math
+ import threading
+ import speech_recognition as sr
+ 
+ # ================= SERIAL =================
+ arduino = serial.Serial('COM6', 115200, timeout=1)
+ time.sleep(2)
+ 
+ # ================= CAMERA =================
+ cap = cv2.VideoCapture(0)
+ cap.set(3, 640)
+ cap.set(4, 480)
+ 
+ # ================= MEDIAPIPE =================
+ mpHands = mp.solutions.hands
+ hands = mpHands.Hands(
+ static_image_mode=False,
+ max_num_hands=1,
+ model_complexity=1,
+ min_detection_confidence=0.7,
+ min_tracking_confidence=0.7
+ )
+ mpDraw = mp.solutions.drawing_utils
+ tipIds = [4, 8, 12, 16, 20]
+ 
+ # ================= SPEECH =================
+ recognizer = sr.Recognizer()
+ mic = sr.Microphone()
+ 
+ def voice_control():
+ while True:
+ try:
+ with mic as source:
+ recognizer.adjust_for_ambient_noise(source)
+ audio = recognizer.listen(source)
+ command = recognizer.recognize_google(audio).lower()
+ print("Voice:", command)
+ 
+ if "light on" in command:
+ arduino.write(b'L')
+ elif "light off" in command:
+ arduino.write(b'l')
+ elif "fan on" in command:
+ arduino.write(b'F')
+ elif "fan off" in command:
+ arduino.write(b'f')
+ except:
+ pass
+ 
+ threading.Thread(target=voice_control, daemon=True).start()
+ 
+ # ================= GESTURE TIMER VARIABLES =================
+ gesture_start = None
+ current_gesture = None
+ hold_time = 3 # seconds required
+ 
+ def fingers_up(lmList):
+ fingers = []
+ fingers.append(1 if lmList[4][1] > lmList[3][1] else 0)
+ for i in range(1,5):
+ fingers.append(1 if lmList[tipIds[i]][2] < lmList[tipIds[i]-2][2] else 0)
+ return fingers
+ 
+ # ================= MAIN LOOP =================
+ while True:
+ success, img = cap.read()
+ imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+ results = hands.process(imgRGB)
+ 
+ detected_gesture = None
+ 
+ if results.multi_hand_landmarks:
+ for handLms in results.multi_hand_landmarks:
+ lmList = []
+ h, w, _ = img.shape
+ for id, lm in enumerate(handLms.landmark):
+ lmList.append([id, int(lm.x*w), int(lm.y*h)])
+ 
+ mpDraw.draw_landmarks(img, handLms, mpHands.HAND_CONNECTIONS)
+ 
+ fingers = fingers_up(lmList)
+ index_to_pinky = fingers[1:5]
+ 
+ if index_to_pinky == [1,1,1,1]:
+ detected_gesture = "LIGHT_ON"
+ elif index_to_pinky == [0,0,0,0]:
+ detected_gesture = "LIGHT_OFF"
+ elif index_to_pinky == [1,1,1,0]:
+ detected_gesture = "FAN_ON"
+ elif index_to_pinky == [1,1,0,0]:
+ detected_gesture = "FAN_OFF"
+ 
+ # ================= HOLD LOGIC =================
+ if detected_gesture != current_gesture:
+ current_gesture = detected_gesture
+ gesture_start = time.time()
+ 
+ if detected_gesture and (time.time() - gesture_start) > hold_time:
+ if detected_gesture == "LIGHT_ON":
+ arduino.write(b'L')
+ elif detected_gesture == "LIGHT_OFF":
+ arduino.write(b'l')
+ elif detected_gesture == "FAN_ON":
+ arduino.write(b'F')
+ elif detected_gesture == "FAN_OFF":
+ arduino.write(b'f')
+ 
+ gesture_start = time.time() # reset to avoid repeat
+ 
+ cv2.imshow("Gesture + Voice Control", img)
+ cv2.waitKey(1)

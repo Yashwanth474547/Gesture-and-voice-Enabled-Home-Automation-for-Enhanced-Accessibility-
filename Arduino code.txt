@@ -1,0 +1,43 @@
+// ===== GESTURE CONTROLLED LIGHT + FAN =====
+
+int ledPin   = 9;   // LED
+int relayPin = 8;   // Relay IN1 (Fan)
+
+char cmd;
+
+void setup() {
+  Serial.begin(115200);
+
+  pinMode(ledPin, OUTPUT);
+  pinMode(relayPin, OUTPUT);
+
+  // Initial OFF state
+  digitalWrite(ledPin, LOW);
+  digitalWrite(relayPin, LOW);
+}
+
+void loop() {
+  if (Serial.available() > 0) {
+    cmd = Serial.read();
+
+    // LIGHT ON
+    if (cmd == 'L') {
+      digitalWrite(ledPin, HIGH);
+    }
+
+    // LIGHT OFF
+    else if (cmd == 'l') {
+      digitalWrite(ledPin, LOW);
+    }
+
+    // FAN ON
+    else if (cmd == 'F') {
+      digitalWrite(relayPin, HIGH);
+    }
+
+    // FAN OFF
+    else if (cmd == 'f') {
+      digitalWrite(relayPin, LOW);
+    }
+  }
+}
