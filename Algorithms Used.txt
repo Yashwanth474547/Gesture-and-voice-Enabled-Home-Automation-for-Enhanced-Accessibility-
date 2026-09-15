@@ -1,0 +1,38 @@
+Algorithms Used (Standard Names + Application)
+1. Convolutional Neural Network (CNN) – via MediaPipe
+Used in: Hand detection and landmark extraction
+Application in your project:
+Detects hand and extracts 21 keypoints for gesture recognition
+2. Keypoint-Based Pose Estimation Algorithm
+Used in: MediaPipe Hands
+Application:
+Identifies positions of fingers (landmarks) for gesture analysis
+3. Rule-Based Classification Algorithm
+Used in: Finger detection & gesture mapping
+Application:
+Classifies gestures based on predefined conditions
+(e.g., [1,1,1,1] → LIGHT_ON)
+4. Pattern Recognition Algorithm
+Used in: Gesture identification
+Application:
+Matches finger patterns to specific appliance commands
+5. Automatic Speech Recognition (ASR)
+Used in: Google Speech Recognition
+Application:
+Converts voice input into text commands
+6. Natural Language Processing (NLP) – Keyword Matching
+Used in: Command interpretation
+Application:
+Extracts keywords like “light on”, “fan off”
+7. Time Thresholding Algorithm
+Used in: Gesture hold logic
+Application:
+Ensures gesture is held for 3 seconds before execution
+8. Multithreading / Parallel Processing
+Used in: Threading module
+Application:
+Runs voice and gesture modules simultaneously
+9. UART Communication Protocol
+Used in: Serial communication
+Application:
+Sends commands from Python to Arduino

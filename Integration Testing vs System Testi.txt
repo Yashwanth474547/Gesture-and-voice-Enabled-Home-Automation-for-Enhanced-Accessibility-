@@ -1,0 +1,22 @@
+Integration Testing vs System Testing
+Integration Testing
+Focus: Testing how different modules work together
+In your project:
+Python ↔️ Arduino communication tested
+Voice/gesture output → correctly sent via serial
+Arduino correctly receives and executes commands
+Example:
+👉 Say “Light ON” → Python sends L → Arduino turns LED ON
+
+✔ Checks data flow between components
+
+System Testing
+Focus: Testing the complete system as a whole
+In your project:
+Voice + Gesture + Python + Arduino + Relay all together
+Real-time appliance control tested
+Tested under different conditions (noise, lighting)
+Example:
+👉 User gives gesture → system detects → appliance turns ON
+
+✔ Checks end-to-end working in real environment

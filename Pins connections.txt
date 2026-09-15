@@ -1,0 +1,21 @@
+LED:
+Pin 9 ──► LED (+)
+LED (–) ──► Resistor ──► GND
+
+Relay Control:
+VCC ──► 5V
+GND ──► GND
+IN1 ──► Pin 8 (Fan)
+IN2 ──► Pin 7 (Bulb)
+
+Fan (DC Motor):
+External + ──► COM1
+NO1 ──► Fan +
+Fan – ──► External –
+Arduino GND ──► External –
+
+Bulb (DC):
+External + ──► COM2
+NO2 ──► Bulb +
+Bulb – ──► External –
+Arduino GND ──► External –

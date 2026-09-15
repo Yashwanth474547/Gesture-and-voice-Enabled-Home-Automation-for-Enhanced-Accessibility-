@@ -1,0 +1,22 @@
+Tools Used
+Python – For implementing gesture and voice recognition logic
+Arduino IDE – For programming the Arduino microcontroller
+OpenCV – For camera handling and image processing
+MediaPipe – For hand tracking and gesture detection
+SpeechRecognition Library – For voice command processing
+PySerial – For serial communication between Python and Arduino
+Technologies Used
+Computer Vision
+Used for detecting hand gestures through camera input
+Artificial Intelligence (AI)
+Used in gesture detection (MediaPipe) and speech recognition
+Machine Learning (ML)
+Used in speech-to-text conversion (Google Speech API)
+Natural Language Processing (NLP)
+Used to interpret voice commands
+Embedded Systems
+Arduino used for controlling hardware devices
+Serial Communication (UART Protocol)
+Enables communication between Python and Arduino
+Internet of Things (Conceptual/Future Scope)
+For potential remote control and automation
